@@ -1,16 +1,13 @@
-const assert = require("assert");
-describe("Конвертер валют"
-, () => {
- it("должен появиться на странице"
-, async ({ browser }) => {
- const puppeteer = await browser.getPuppeteer();
- const [page] = await puppeteer.pages();
+const { assert } = require('chai');
 
- await page.goto("https://ya.ru");
- await page.keyboard.type("Курс доллара к рублю");
- await page.keyboard.press("Enter");
- await browser.pause(1000);
- const selector = await page.$(".Converter");
- assert.ok(selector, "Конвертер валют не появился");
- });
+describe('github', async function() {
+    it('Тест, который пройдет', async function() {
+        await this.browser.url('https://github.com/gemini-testing/hermione');
+        await this.browser.assertView('plain', '#readme', {
+            compositeImage: true,
+        });
+
+        const title = await this.browser.$('#readme h1').getText();
+        assert.equal(title, 'Hermione');
+    });
 });
