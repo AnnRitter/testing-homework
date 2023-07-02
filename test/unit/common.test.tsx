@@ -33,7 +33,7 @@ it('в шапке отображаются ссылки на страницы м
         let linkContacts = screen.getByRole('link', {name: 'Contacts'})
         let linkCart = screen.getByTestId('cart-label')
      
-Promise.all([events.click(linkMain), events.click(linkCatalog), events.click(linkDelivery),
+    Promise.all([events.click(linkMain), events.click(linkCatalog), events.click(linkDelivery),
       events.click(linkContacts), events.click(linkCart)]).then( () => {
       expect(linkMain.getAttribute('href')).toBe('/hw/store/')
       expect(linkCatalog.getAttribute('href')).toBe('/hw/store/catalog')

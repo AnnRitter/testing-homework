@@ -12,6 +12,7 @@ import { ProductItem } from '../../src/client/components/ProductItem'
 import { ProductDetails } from '../../src/client/components/ProductDetails'
 import events from '@testing-library/user-event'
 import { Cart } from '../../src/client/pages/Cart'
+import { addToCart } from '../../src/client/store'
 
 const basename = '/hw/store';
 const cart = new CartApi();
@@ -161,6 +162,118 @@ it('если товар  добавлен в корзину, повторное 
   await events.click(cartButton)
 
   expect(container.querySelector('.Cart-Count')?.textContent).toBe('2')
-  
 
+})
+
+it('содержимое корзины должно сохраняться между перезагрузками страницы', () => {
+  
+  const cart = (
+    <BrowserRouter basename={basename}>
+      <Provider store={store}>
+        <Cart />
+        
+      </Provider>
+    </BrowserRouter>
+  )
+
+  const { container, getByTestId } = render(cart)
+
+  let itemInCart = getByTestId('0')
+  expect(itemInCart).toBeDefined()
+
+  window.location.reload();
+
+  expect(itemInCart).toBeDefined()
+  
+})
+
+it('в корзине должна отображаться таблица с добавленными в нее товарами', () => {
+  const cart = (
+    <BrowserRouter basename={basename}>
+      <Provider store={store}>
+        <Cart />
+      </Provider>
+    </BrowserRouter>
+  )
+
+  const { container, getByTestId } = render(cart)
+  let table = container.querySelector('.Cart-Table')
+  let itemInCart = getByTestId('0')
+
+  expect(table).toBeDefined()
+  expect(itemInCart).toBeDefined()
+  
+  
+})
+
+it('для каждого товара есть название, цена, количество, стоимость, общая сумма заказа', () => {
+  const cart = (
+    <BrowserRouter basename={basename}>
+      <Provider store={store}>
+        <Cart />
+      </Provider>
+    </BrowserRouter>
+  )
+
+  const { container, getByTestId } = render(cart)
+
+  expect(getByTestId('0')).toBeDefined()
+  expect(container.querySelector('.Cart-Name')?.textContent).toBe('Sleek Bike')
+  expect(container.querySelector('.Cart-Price')?.textContent).toBe('$781')
+  expect(container.querySelector('.Cart-Count')?.textContent).toBe('2')
+  expect(container.querySelector('.Cart-Total')?.textContent).toBe('$1562')
+  expect(container.querySelector('.Cart-OrderPrice')?.textContent).toBe('$1562')
+
+})
+
+it('по нажатию на "очистить корзину" товары должны удаляться', async () => {
+  const cart = (
+    <BrowserRouter basename={basename}>
+      <Provider store={store}>
+        <Cart />
+      </Provider>
+    </BrowserRouter>
+  )
+
+  const { container, getByTestId } = render(cart)
+  
+  /* @ts-ignore */
+  let cartButton = screen.getByText('Clear shopping cart')
+ 
+  expect(container.querySelector('.Cart-Table')?.textContent).toBeDefined()
+  await events.click(cartButton)
+  expect(container.querySelector('.Cart-Table')?.textContent).toBeFalsy()
+  
+})
+
+it('если корзина пустая, должна отображаться ссылка на каталог товаров', async () => {
+  
+  const good  = {
+    id: 1,
+    name: 'test',
+    price: 100,
+    description: 'test',
+    material: 'test',
+    color: 'test',
+
+  };
+  store.dispatch(addToCart(good))
+
+  const cart = (
+    <BrowserRouter basename={basename}>
+      <Provider store={store}>
+        <Cart />
+      </Provider>
+    </BrowserRouter>
+  )
+  const { container, getByTestId } = render(cart)
+
+  
+  
+  /* @ts-ignore */
+  let cartButton = screen.getByText('Clear shopping cart')
+ 
+  await events.click(cartButton)
+
+  expect(screen.getByRole('link', { name: 'catalog'}).getAttribute('href')).toBe('/hw/store/catalog')
 })

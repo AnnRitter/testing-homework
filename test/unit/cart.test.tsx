@@ -4,15 +4,15 @@ import { BrowserRouter } from 'react-router-dom'
 import {Provider} from 'react-redux'
 import {initStore} from '../../src/client/store'
 import {Application} from '../../src/client/Application'
-import { CartApi, ExampleApi } from '../../src/client/api';
+import { CartApi, ExampleApi } from '../../src/client/api'
 import React from "react";
-import { addToCart, clearCart } from '../../src/client/store';
+import { addToCart, clearCart } from '../../src/client/store'
 
-const basename = '/hw/store';
+  const basename = '/hw/store'
 
-  const api = new ExampleApi(basename);
-  let cart = new CartApi();
-  const store = initStore(api, cart);
+  const api = new ExampleApi(basename)
+  let cart = new CartApi()
+  const store = initStore(api, cart)
 
   it('Проверка количества элементов рядом с корзиной в шапке - один элемент', () => {
     
@@ -63,3 +63,6 @@ const basename = '/hw/store';
     expect(Object.keys(store.getState().cart).length).toBe(0)
     expect(elem.textContent).toBe('Cart')
   })
+
+  
+ 
