@@ -28,10 +28,7 @@ it('название магазина в шапке должно быть ссы
       
      let link = screen.getByRole('link', {name: 'Example store'})
 
-    console.log('before', link.getAttribute('href'));
-
       await events.click(link)
-      console.log('after', link.getAttribute('href'));
     
    expect(link.getAttribute('href')).toBe('/hw/store/')
 })
